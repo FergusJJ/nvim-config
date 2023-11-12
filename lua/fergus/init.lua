@@ -23,7 +23,7 @@ autocmd('TextYankPost', {
 })
 
 autocmd({"BufWritePre"}, {
-    group = BasilGroup,
+    group = FergusGroup,
     pattern = "*",
     command = [[%s/\s\+$//e]],
 })
