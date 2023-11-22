@@ -1,4 +1,3 @@
-
 -- Lazy.nvim
 print()
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -16,10 +15,24 @@ vim.opt.rtp:prepend(lazypath)
 
 local plugins = {
   {
+    'nvimdev/dashboard-nvim',
+    event = 'VimEnter',
+    config = function()
+      require('dashboard').setup {
+        -- config
+      }
+    end,
+    dependencies = { { 'nvim-tree/nvim-web-devicons' } }
+  },
+  {
+    "christoomey/vim-tmux-navigator",
+    lazy = false,
+  },
+  {
     "rcarriga/nvim-dap-ui",
     dependencies = "mfussenegger/nvim-dap",
     event = "VeryLazy",
-    config = function ()
+    config = function()
       local dap = require("dap")
       local dapui = require("dapui")
       dap.listeners.after.event_initialized["dapui_config"] = function()
@@ -48,30 +61,32 @@ local plugins = {
   {
     "mfussenegger/nvim-dap",
   },
+
+  --  {
+  --    "nvimtools/none-ls.nvim",
+  --    event = "VeryLazy",
+  --  },
   {
-    "nvimtools/none-ls.nvim",
-    event = "VeryLazy",
-  },
-  {
-	  'nvim-telescope/telescope.nvim', tag = '0.1.4',
-	  -- or                            , branch = '0.1.x',
-	  dependencies = { {'nvim-lua/plenary.nvim'} }
+    'nvim-telescope/telescope.nvim',
+    tag = '0.1.4',
+    -- or                            , branch = '0.1.x',
+    dependencies = { { 'nvim-lua/plenary.nvim' } }
   },
 
   ({
-      "folke/trouble.nvim",
-      config = function()
-          require("trouble").setup {
-              icons = false,
-              -- your configuration comes here
-              -- or leave it empty to use the default settings
-              -- refer to the configuration section below
-          }
-      end
+    "folke/trouble.nvim",
+    config = function()
+      require("trouble").setup {
+        icons = false,
+        -- your configuration comes here
+        -- or leave it empty to use the default settings
+        -- refer to the configuration section below
+      }
+    end
   }),
 
 
-  ({"nvim-treesitter/nvim-treesitter", build = ":TSUpdate"}),
+  ({ "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" }),
   ("nvim-treesitter/playground"),
   ("theprimeagen/harpoon"),
   ("theprimeagen/refactoring.nvim"),
@@ -79,32 +94,32 @@ local plugins = {
   ("tpope/vim-fugitive"),
   ("nvim-treesitter/nvim-treesitter-context"),
 
-   {
-	  'VonHeikemen/lsp-zero.nvim',
-	  branch = 'v1.x',
-	  dependencies = {
-		  -- LSP Support
-		  {'neovim/nvim-lspconfig'},
-		  {'williamboman/mason.nvim'},
-		  {'williamboman/mason-lspconfig.nvim'},
+  {
+    'VonHeikemen/lsp-zero.nvim',
+    branch = 'v3.x',
+    dependencies = {
+      -- LSP Support
+      { 'neovim/nvim-lspconfig' },
+      { 'williamboman/mason.nvim' },
+      { 'williamboman/mason-lspconfig.nvim' },
 
-		  -- Autocompletion
-		  {'hrsh7th/nvim-cmp'},
-		  {'hrsh7th/cmp-buffer'},
-		  {'hrsh7th/cmp-path'},
-		  {'saadparwaiz1/cmp_luasnip'},
-		  {'hrsh7th/cmp-nvim-lsp'},
-		  {'hrsh7th/cmp-nvim-lua'},
+      -- Autocompletion
+      { 'hrsh7th/nvim-cmp' },
+      { 'hrsh7th/cmp-buffer' },
+      { 'hrsh7th/cmp-path' },
+      { 'saadparwaiz1/cmp_luasnip' },
+      { 'hrsh7th/cmp-nvim-lsp' },
+      { 'hrsh7th/cmp-nvim-lua' },
 
-		  -- Snippets
-		  {'L3MON4D3/LuaSnip'},
-		  {'rafamadriz/friendly-snippets'},
-	  }
+      -- Snippets
+      { 'L3MON4D3/LuaSnip' },
+      { 'rafamadriz/friendly-snippets' },
+    }
   },
 
-   {
-      "windwp/nvim-autopairs",
-      config = function() require("nvim-autopairs").setup {} end
+  {
+    "windwp/nvim-autopairs",
+    config = function() require("nvim-autopairs").setup {} end
   },
   ({
     "catppuccin/nvim",
