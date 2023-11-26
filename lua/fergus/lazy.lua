@@ -1,6 +1,6 @@
 -- Lazy.nvim
-print()
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
     "git",
@@ -15,108 +15,66 @@ vim.opt.rtp:prepend(lazypath)
 
 local plugins = {
   {
-    'nvimdev/dashboard-nvim',
-    event = 'VimEnter',
-    config = function()
-      require('dashboard').setup {
-        -- config
-      }
-    end,
-    dependencies = { { 'nvim-tree/nvim-web-devicons' } }
-  },
-  {
     "christoomey/vim-tmux-navigator",
     lazy = false,
   },
-  {
-    "rcarriga/nvim-dap-ui",
-    dependencies = "mfussenegger/nvim-dap",
-    event = "VeryLazy",
-    config = function()
-      local dap = require("dap")
-      local dapui = require("dapui")
-      dap.listeners.after.event_initialized["dapui_config"] = function()
-        dapui.open()
-      end
-      dap.listeners.before.event_terminated["dapui_config"] = function()
-        dapui.close()
-      end
-      dap.listeners.before.evenr_exited["dapui_config"] = function()
-        dapui.close()
-      end
-    end
-  },
-  {
-    "jay-babu/mason-nvim-dap.nvim",
-    dependencies = {
-      "williamboman/mason.nvim",
-      "mfussenegger/nvim-dap"
-    },
-    opts = {
-      handlers = {},
-      ensure_installed = {},
-    },
-    event = "VeryLazy",
-  },
-  {
-    "mfussenegger/nvim-dap",
-  },
-
-  --  {
-  --    "nvimtools/none-ls.nvim",
-  --    event = "VeryLazy",
-  --  },
   {
     'nvim-telescope/telescope.nvim',
     tag = '0.1.4',
     -- or                            , branch = '0.1.x',
     dependencies = { { 'nvim-lua/plenary.nvim' } }
   },
-
-  ({
+  {
     "folke/trouble.nvim",
     config = function()
       require("trouble").setup {
         icons = false,
-        -- your configuration comes here
-        -- or leave it empty to use the default settings
-        -- refer to the configuration section below
       }
     end
-  }),
+  },
+    {
+    "nvimtools/none-ls.nvim",
+  },
+  {
+    "williamboman/mason.nvim",
+    opts = {
+    ensure_installed = {
+      "black", -- Python formatter
 
+      -- Go tools and language server
+      "gopls", -- Go language server
+      "gofumpt", -- Go formatter
+      "golines", -- Go formatter that shortens long lines
+      "staticcheck", -- Go static analysis tool
 
-  ({ "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" }),
+      -- Haskell tools and language server
+      "haskell-language-server", -- Haskell language server
+      "stylish-haskell", -- Haskell code formatter
+
+      -- C tools and language server
+      "clangd", -- C/C++/Objective-C language server
+      "cpplint", -- C/C++ linter
+      "sumneko_lua",
+    },
+    },
+  },
+  {
+    "neovim/nvim-lspconfig",
+  },
+  { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
   ("nvim-treesitter/playground"),
   ("theprimeagen/harpoon"),
   ("theprimeagen/refactoring.nvim"),
   ("mbbill/undotree"),
   ("tpope/vim-fugitive"),
   ("nvim-treesitter/nvim-treesitter-context"),
-
-  {
-    'VonHeikemen/lsp-zero.nvim',
-    branch = 'v3.x',
-    dependencies = {
-      -- LSP Support
-      { 'neovim/nvim-lspconfig' },
-      { 'williamboman/mason.nvim' },
-      { 'williamboman/mason-lspconfig.nvim' },
-
-      -- Autocompletion
-      { 'hrsh7th/nvim-cmp' },
-      { 'hrsh7th/cmp-buffer' },
-      { 'hrsh7th/cmp-path' },
-      { 'saadparwaiz1/cmp_luasnip' },
-      { 'hrsh7th/cmp-nvim-lsp' },
-      { 'hrsh7th/cmp-nvim-lua' },
-
-      -- Snippets
-      { 'L3MON4D3/LuaSnip' },
-      { 'rafamadriz/friendly-snippets' },
-    }
-  },
-
+  { "hrsh7th/nvim-cmp" },
+  { "hrsh7th/cmp-nvim-lsp" },
+  { "hrsh7th/cmp-buffer" },
+  { "hrsh7th/cmp-path" },
+  { "saadparwaiz1/cmp_luasnip" },
+  { "L3MON4D3/LuaSnip" },
+  { "rafamadriz/friendly-snippets" },
   {
     "windwp/nvim-autopairs",
     config = function() require("nvim-autopairs").setup {} end
