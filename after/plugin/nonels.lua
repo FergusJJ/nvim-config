@@ -2,7 +2,7 @@ local nullls = require("null-ls")
 local lspconfig = require("lspconfig")
 local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
 
-local lsp_servers = { "pyright", "gopls", "clangd", "rust_analyzer", "lua_ls" }
+local lsp_servers = { "pyright", "gopls", "clangd", "rust_analyzer", "lua_ls", "hls" }
 
 -- Shared on_attach function
 local on_attach = function(client, bufnr)
