@@ -2,7 +2,7 @@ local nullls = require("null-ls")
 local lspconfig = require("lspconfig")
 local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
 
-local lsp_servers = { "pyright", "gopls", "clangd", "rust_analyzer", "lua_ls", "hls" }
+local lsp_servers = { "pyright", "gopls", "clangd", "rust_analyzer", "lua_ls", "hls", "html", "cssls" }
 
 -- Shared on_attach function
 local on_attach = function(client, bufnr)
@@ -84,6 +84,6 @@ vim.diagnostic.config({
   virtual_text = true,
   signs = true,
   underline = true,
-  update_in_insert = false,
+  update_in_insert = true,
   severity_sort = true,
 })
