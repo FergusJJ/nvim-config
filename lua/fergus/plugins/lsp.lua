@@ -11,6 +11,8 @@ return {
         "L3MON4D3/LuaSnip",
         "saadparwaiz1/cmp_luasnip",
         "j-hui/fidget.nvim",
+        --needed for java, idk whether same is needed for python etc
+        "mfussenegger/nvim-jdtls",
     },
 
     config = function()
@@ -29,6 +31,7 @@ return {
                 "lua_ls",
                 "rust_analyzer",
                 "gopls",
+                "jdtls",
             },
             handlers = {
                 function(server_name) -- default handler (optional)
@@ -50,6 +53,18 @@ return {
                         }
                     }
                 end,
+                ["jdtls"] = function ()
+                    local jdtls = require("jdtls")
+                    local config = {
+                        cmd = {"/Users/fergus.johnson/jdt-language-server/jdtls"},
+                        root_dir = vim.fs.dirname(vim.fs.find({'gradlew', '.git', 'mvnw'}, { upward = true })[1]),
+                        capabilities = capabilities,
+                    }
+                    jdtls.start_or_attach(config)
+                end,
+                --disables jdtls, I think might want to use something else not sure
+                --["jdtls"] = function () end,
+
             }
         })
 
