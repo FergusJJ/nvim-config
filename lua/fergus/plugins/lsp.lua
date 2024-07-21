@@ -32,6 +32,8 @@ return {
                 "rust_analyzer",
                 "gopls",
                 "jdtls",
+                "ruff",
+                "basedpyright"
             },
             handlers = {
                 function(server_name) -- default handler (optional)
@@ -39,6 +41,7 @@ return {
                         capabilities = capabilities
                     }
                 end,
+
                 ["lua_ls"] = function()
                     local lspconfig = require("lspconfig")
                     lspconfig.lua_ls.setup {
@@ -53,19 +56,57 @@ return {
                         }
                     }
                 end,
-                ["jdtls"] = function ()
-                    local jdtls = require("jdtls")
-                    local config = {
-                        cmd = {"/Users/fergus.johnson/jdt-language-server/jdtls"},
-                        root_dir = vim.fs.dirname(vim.fs.find({'gradlew', '.git', 'mvnw'}, { upward = true })[1]),
-                        capabilities = capabilities,
-                    }
-                    jdtls.start_or_attach(config)
-                end,
-                --disables jdtls, I think might want to use something else not sure
-                --["jdtls"] = function () end,
 
-            }
+                ["rust_analyzer"] = function()
+                    local lspconfig = require("lspconfig")
+                    lspconfig.rust_analyzer.setup {}
+                end,
+
+                ["ruff"] = function()
+                    local lspconfig = require("lspconfig")
+                    lspconfig.ruff.setup {
+                        on_attach = function(client, _)
+                            client.server_capabilities.hoverProvider = false
+                        end
+                    }
+                end,
+
+                ["basedpyright"] = function()
+                    local lspconfig = require("lspconfig")
+                    lspconfig.basedpyright.setup {
+                        settings = {
+                            basedpyright = {
+                                disableOrganizeImports = true,
+                                analysis = {
+                                    ignore = { "*" },
+                                    useLibraryCodeForTypes = true,
+                                    typeCheckingMode = "standard",
+                                    diagnosticMode = "openFilesOnly",
+                                    autoImportCompletions = true,
+                                }
+                            },
+                        },
+                    }
+                end,
+
+                --               ["pyright"] = function()
+                --                   local lspconfig = require("lspconfig")
+                --                   lspconfig.pyright.setup {
+                --                       settings = {
+                --                           pyright = {
+                --                               disableOrganizeImports = true,
+                --                           },
+                --                           python = {
+                --                               analysis = {
+                --                                   ignore = { '*' },
+                --                               },
+                --                           },
+                --                       },
+                --                   }
+                --               end
+
+
+            },
         })
 
         local cmp_select = { behavior = cmp.SelectBehavior.Select }
