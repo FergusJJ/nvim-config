@@ -90,7 +90,7 @@ return {
                         },
                         before_init = function(_, config)
                             local venv_base_path = util.path.join(vim.env.HOME, "virtualenvs")
-                            local venv_python_path = util.path.join(venv_base_path, "nvim-venv", "bin", "python")
+                            local venv_python_path = util.path.join(venv_base_path, "default-venv", "bin", "python")
 
                             if config.root_dir ~= nil then
                                 local root_dir_name = ""
