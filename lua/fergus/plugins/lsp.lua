@@ -73,6 +73,8 @@ return {
 
                 ["basedpyright"] = function()
                     local lspconfig = require("lspconfig")
+                    local util = require("lspconfig/util")
+
                     lspconfig.basedpyright.setup {
                         settings = {
                             basedpyright = {
@@ -86,26 +88,47 @@ return {
                                 }
                             },
                         },
+                        before_init = function(_, config)
+                            local venv_base_path = util.path.join(vim.env.HOME, "virtualenvs")
+                            local venv_python_path = util.path.join(venv_base_path, "nvim-venv", "bin", "python")
+
+                            if config.root_dir ~= nil then
+                                local root_dir_name = ""
+                                for substring in string.gmatch(config.root_dir, "([^/]+)") do
+                                    root_dir_name = substring
+                                end
+                                local project_venv_path = util.path.join(venv_base_path, root_dir_name)
+                                local project_venv_bin_path = util.path.join(project_venv_path, "bin", "python")
+                                local function dir_exists(path)
+                                    local stat = vim.loop.fs_stat(path)
+                                    return stat and stat.type == 'directory'
+                                end
+                                if not dir_exists(project_venv_path) then
+                                    os.execute(string.format("python3 -m venv %s", project_venv_path))
+                                    print("Created virtual environment: ", project_venv_path)
+                                    local requirements_path = util.path.join(config.root_dir, "requirements.txt")
+                                    local function file_exists(path)
+                                        local stat = vim.loop.fs_stat(path)
+                                        return stat and stat.type == 'file'
+                                    end
+                                    if file_exists(requirements_path) then
+                                        os.execute(string.format("%s -m pip install -r %s", project_venv_bin_path,
+                                            requirements_path))
+                                        print("Installed dependencies from requirements.txt")
+                                    else
+                                        print("No requirements.txt file found.")
+                                    end
+                                end
+                                venv_python_path = project_venv_bin_path
+                            end
+
+                            -- Set the Python path in the LSP config
+                            config.settings.python = {
+                                pythonPath = venv_python_path
+                            }
+                        end,
                     }
-                end,
-
-                --               ["pyright"] = function()
-                --                   local lspconfig = require("lspconfig")
-                --                   lspconfig.pyright.setup {
-                --                       settings = {
-                --                           pyright = {
-                --                               disableOrganizeImports = true,
-                --                           },
-                --                           python = {
-                --                               analysis = {
-                --                                   ignore = { '*' },
-                --                               },
-                --                           },
-                --                       },
-                --                   }
-                --               end
-
-
+                end
             },
         })
 
