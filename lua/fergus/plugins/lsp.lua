@@ -28,12 +28,14 @@ return {
         require("mason").setup()
         require("mason-lspconfig").setup({
             ensure_installed = {
+                "clangd",
                 "lua_ls",
                 "rust_analyzer",
                 "gopls",
                 "jdtls",
                 "ruff",
-                "basedpyright"
+                "basedpyright",
+                "hls"
             },
             handlers = {
                 function(server_name) -- default handler (optional)
@@ -41,7 +43,15 @@ return {
                         capabilities = capabilities
                     }
                 end,
+                ["clangd"] = function ()
+                    local lspconfig = require("lspconfig")
+                    lspconfig.clangd.setup {
+                        on_attach = function (client, _)
+                            client.server_capabilities.signatureHelpProvider = false
+                        end
+                    }
 
+                end,
                 ["lua_ls"] = function()
                     local lspconfig = require("lspconfig")
                     lspconfig.lua_ls.setup {
@@ -120,6 +130,7 @@ return {
                                     end
                                 end
                                 venv_python_path = project_venv_bin_path
+                                print("setting venv: %s", venv_python_path)
                             end
 
                             -- Set the Python path in the LSP config
