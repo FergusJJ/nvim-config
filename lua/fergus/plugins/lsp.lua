@@ -45,20 +45,40 @@ return {
           }
         end,
 
+        --        ["clangd"] = function()
+        --          local lspconfig = require("lspconfig")
+        --          lspconfig.clangd.setup {
+        --            cmd = { "clangd", "--background-index", "--completion-style=detailed", "--header-insertion=iwyu", "--log=verbose" },
+        --            --on_attach = function(client, _)
+        --            --  client.server_capabilities.signatureHelpProvider = false
+        --            --end,
+        --            filetypes = { "c" },
+        --            root_dir = function()
+        --              return vim.loop.cwd()
+        --            end,
+        --          }
+        --        end,
         ["clangd"] = function()
           local lspconfig = require("lspconfig")
           lspconfig.clangd.setup {
-            cmd = { "clangd", "--background-index", "--completion-style=detailed", "--header-insertion=iwyu", "--log=verbose" },
-            --on_attach = function(client, _)
-            --  client.server_capabilities.signatureHelpProvider = false
-            --end,
-            filetypes = { "c" },
-            root_dir = function()
-              return vim.loop.cwd()
-            end,
+            root_dir = require("lspconfig").util.root_pattern("src"),
+            cmd = {
+              "clangd",
+              "--background-index",
+              "--pch-storage=memory",
+              "--all-scopes-completion",
+              "--pretty",
+              "--header-insertion=never",
+              "-j=4",
+              "--inlay-hints",
+              "--header-insertion-decorators",
+              "--function-arg-placeholders",
+              "--completion-style=detailed",
+            },
+            filetypes = { "c", "cpp", "objc", "objcpp" },
+            capabilities = capabilities,
           }
         end,
-
         ["lua_ls"] = function()
           local lspconfig = require("lspconfig")
           lspconfig.lua_ls.setup {
