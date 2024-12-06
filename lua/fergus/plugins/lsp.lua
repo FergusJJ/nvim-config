@@ -35,76 +35,14 @@ return {
         "jdtls",
         "ruff",
         "basedpyright",
-        "hls"
+        "hls",
+        "elixirls"
       },
 
       handlers = {
         function(server_name) -- default handler (optional)
           require("lspconfig")[server_name].setup {
             capabilities = capabilities
-          }
-        end,
-
-        --        ["clangd"] = function()
-        --          local lspconfig = require("lspconfig")
-        --          lspconfig.clangd.setup {
-        --            cmd = { "clangd", "--background-index", "--completion-style=detailed", "--header-insertion=iwyu", "--log=verbose" },
-        --            --on_attach = function(client, _)
-        --            --  client.server_capabilities.signatureHelpProvider = false
-        --            --end,
-        --            filetypes = { "c" },
-        --            root_dir = function()
-        --              return vim.loop.cwd()
-        --            end,
-        --          }
-        --        end,
-        ["clangd"] = function()
-          local lspconfig = require("lspconfig")
-          lspconfig.clangd.setup {
-            root_dir = require("lspconfig").util.root_pattern("src"),
-            cmd = {
-              "clangd",
-              "--background-index",
-              "--pch-storage=memory",
-              "--all-scopes-completion",
-              "--pretty",
-              "--header-insertion=never",
-              "-j=4",
-              "--inlay-hints",
-              "--header-insertion-decorators",
-              "--function-arg-placeholders",
-              "--completion-style=detailed",
-            },
-            filetypes = { "c", "cpp", "objc", "objcpp" },
-            capabilities = capabilities,
-          }
-        end,
-        ["lua_ls"] = function()
-          local lspconfig = require("lspconfig")
-          lspconfig.lua_ls.setup {
-            capabilities = capabilities,
-            settings = {
-              Lua = {
-                runtime = { version = "Lua 5.1" },
-                diagnostics = {
-                  globals = { "bit", "vim", "it", "describe", "before_each", "after_each" },
-                }
-              }
-            }
-          }
-        end,
-
-        ["rust_analyzer"] = function()
-          local lspconfig = require("lspconfig")
-          lspconfig.rust_analyzer.setup {}
-        end,
-
-        ["ruff"] = function()
-          local lspconfig = require("lspconfig")
-          lspconfig.ruff.setup {
-            on_attach = function(client, _)
-              client.server_capabilities.hoverProvider = false
-            end
           }
         end,
 
@@ -168,6 +106,73 @@ return {
           }
         end
       },
+
+      ["clangd"] = function()
+        local lspconfig = require("lspconfig")
+        lspconfig.clangd.setup {
+          root_dir = require("lspconfig").util.root_pattern("src"),
+          cmd = {
+            "clangd",
+            "--background-index",
+            "--pch-storage=memory",
+            "--all-scopes-completion",
+            "--pretty",
+            "--header-insertion=never",
+            "-j=4",
+            "--inlay-hints",
+            "--header-insertion-decorators",
+            "--function-arg-placeholders",
+            "--completion-style=detailed",
+          },
+          filetypes = { "c", "cpp", "objc", "objcpp" },
+          capabilities = capabilities,
+        }
+      end,
+
+      ["elixirls"] = function()
+        local lspconfig = require("lspconfig")
+        lspconfig.elixirls.setup {
+          capabilities = capabilities,
+          settings = {
+            elixirLS = {
+              dialyzerEnabled = true,
+              fetchDeps = false,
+              enableTestLenses = true,
+              suggestSpecs = true,
+            }
+          },
+        }
+      end,
+
+      ["lua_ls"] = function()
+        local lspconfig = require("lspconfig")
+        lspconfig.lua_ls.setup {
+          capabilities = capabilities,
+          settings = {
+            Lua = {
+              runtime = { version = "Lua 5.1" },
+              diagnostics = {
+                globals = { "bit", "vim", "it", "describe", "before_each", "after_each" },
+              }
+            }
+          }
+        }
+      end,
+
+      ["ruff"] = function()
+        local lspconfig = require("lspconfig")
+        lspconfig.ruff.setup {
+          on_attach = function(client, _)
+            client.server_capabilities.hoverProvider = false
+          end
+        }
+      end,
+
+      ["rust_analyzer"] = function()
+        local lspconfig = require("lspconfig")
+        lspconfig.rust_analyzer.setup {}
+      end,
+
     })
 
     local cmp_select = { behavior = cmp.SelectBehavior.Select }
