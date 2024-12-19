@@ -37,7 +37,7 @@ return {
         "jdtls",
         "ruff",
         "rust_analyzer",
-        "solidity"
+        "solidity_ls_nomicfoundation"
       },
 
       handlers = {
@@ -173,13 +173,27 @@ return {
           lspconfig.rust_analyzer.setup {}
         end,
 
-        ["solidity"] = function()
+        ["solidity_ls_nomicfoundation"] = function()
           local lspconfig = require("lspconfig")
+          local util = require("lspconfig.util")
+
           lspconfig.solidity.setup {
             cmd = { "nomicfoundation-solidity-language-server", "--stdio" },
             filetypes = { "solidity" },
-            root_dir = require("lspconfig.util").root_pattern("hardhat.config.js", "hardhat.config.ts", "foundry.toml", "forge.toml"),
+            root_dir = util.root_pattern("hardhat.config.js", "hardhat.config.ts", "foundry.toml", "forge.toml", ".git"),
             single_file_support = true,
+            settings = {
+              solidity = {
+                remappings = {
+                  ["@openzeppelin/"] = "lib/openzeppelin-contracts/",
+                  ["forge-std/"] = "lib/forge-std/src/",
+                  ["account-abstraction/"] = "lib/account-abstraction/"
+                },
+                formatting = {
+                  provider = "prettierd",
+                },
+              },
+            },
           }
         end
 
