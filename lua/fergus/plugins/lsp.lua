@@ -192,6 +192,7 @@ return {
                 formatting = {
                   provider = "prettierd",
                 },
+                linter = "solhint"
               },
             },
           }
