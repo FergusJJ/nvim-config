@@ -105,89 +105,85 @@ return {
               }
             end,
           }
-        end
-      },
+        end,
 
-      ["clangd"] = function()
-        local lspconfig = require("lspconfig")
-        lspconfig.clangd.setup {
-          root_dir = require("lspconfig").util.root_pattern("src"),
-          cmd = {
-            "clangd",
-            "--background-index",
-            "--pch-storage=memory",
-            "--all-scopes-completion",
-            "--pretty",
-            "--header-insertion=never",
-            "-j=4",
-            "--inlay-hints",
-            "--header-insertion-decorators",
-            "--function-arg-placeholders",
-            "--completion-style=detailed",
-          },
-          filetypes = { "c", "cpp", "objc", "objcpp" },
-          capabilities = capabilities,
-        }
-      end,
+        ["clangd"] = function()
+          local lspconfig = require("lspconfig")
+          lspconfig.clangd.setup {
+            root_dir = require("lspconfig").util.root_pattern("src"),
+            cmd = {
+              "clangd",
+              "--background-index",
+              "--pch-storage=memory",
+              "--all-scopes-completion",
+              "--pretty",
+              "--header-insertion=never",
+              "-j=4",
+              "--inlay-hints",
+              "--header-insertion-decorators",
+              "--function-arg-placeholders",
+              "--completion-style=detailed",
+            },
+            filetypes = { "c", "cpp", "objc", "objcpp" },
+            capabilities = capabilities,
+          }
+        end,
 
-      ["elixirls"] = function()
-        local lspconfig = require("lspconfig")
-        lspconfig.elixirls.setup {
-          capabilities = capabilities,
-          settings = {
-            elixirLS = {
-              dialyzerEnabled = true,
-              fetchDeps = false,
-              enableTestLenses = true,
-              suggestSpecs = true,
-            }
-          },
-        }
-      end,
+        ["elixirls"] = function()
+          local lspconfig = require("lspconfig")
+          lspconfig.elixirls.setup {
+            capabilities = capabilities,
+            settings = {
+              elixirLS = {
+                dialyzerEnabled = true,
+                fetchDeps = false,
+                enableTestLenses = true,
+                suggestSpecs = true,
+              }
+            },
+          }
+        end,
 
-      ["lua_ls"] = function()
-        local lspconfig = require("lspconfig")
-        lspconfig.lua_ls.setup {
-          capabilities = capabilities,
-          settings = {
-            Lua = {
-              runtime = { version = "Lua 5.1" },
-              diagnostics = {
-                globals = { "bit", "vim", "it", "describe", "before_each", "after_each" },
+        ["lua_ls"] = function()
+          local lspconfig = require("lspconfig")
+          lspconfig.lua_ls.setup {
+            capabilities = capabilities,
+            settings = {
+              Lua = {
+                runtime = { version = "Lua 5.1" },
+                diagnostics = {
+                  globals = { "bit", "vim", "it", "describe", "before_each", "after_each" },
+                }
               }
             }
           }
-        }
-      end,
+        end,
 
-      ["ruff"] = function()
-        local lspconfig = require("lspconfig")
-        lspconfig.ruff.setup {
-          on_attach = function(client, _)
-            client.server_capabilities.hoverProvider = false
-          end
-        }
-      end,
-
-      ["rust_analyzer"] = function()
-        local lspconfig = require("lspconfig")
-        lspconfig.rust_analyzer.setup {}
-      end,
-
-      ["solidity"] = function()
-        local lspconfig = require("lspconfig")
-        lspconfig.solidity.setup {
-          cmd = { "nomicfoundation-solidity-language-server", "--stdio" },
-          filetypes = { "solidity" },
-          root_dir = require("lspconfig.util").root_pattern("hardhat.config.js", "hardhat.config.ts", "foundry.toml"),
-          single_file_support = true,
-          settings = {
-            solidity = {
-              compilerPath = vim.fn.exepath("solc")
-            }
+        ["ruff"] = function()
+          local lspconfig = require("lspconfig")
+          lspconfig.ruff.setup {
+            on_attach = function(client, _)
+              client.server_capabilities.hoverProvider = false
+            end
           }
-        }
-      end,
+        end,
+
+        ["rust_analyzer"] = function()
+          local lspconfig = require("lspconfig")
+          lspconfig.rust_analyzer.setup {}
+        end,
+
+        ["solidity"] = function()
+          local lspconfig = require("lspconfig")
+          lspconfig.solidity.setup {
+            cmd = { "nomicfoundation-solidity-language-server", "--stdio" },
+            filetypes = { "solidity" },
+            root_dir = require("lspconfig.util").root_pattern("hardhat.config.js", "hardhat.config.ts", "foundry.toml", "forge.toml"),
+            single_file_support = true,
+          }
+        end
+
+      },
 
     })
 
