@@ -28,15 +28,16 @@ return {
     require("mason").setup()
     require("mason-lspconfig").setup({
       ensure_installed = {
+        "basedpyright",
         "clangd",
+        "elixirls",
         "lua_ls",
-        "rust_analyzer",
         "gopls",
+        "hls",
         "jdtls",
         "ruff",
-        "basedpyright",
-        "hls",
-        "elixirls"
+        "rust_analyzer",
+        "solidity"
       },
 
       handlers = {
@@ -171,6 +172,21 @@ return {
       ["rust_analyzer"] = function()
         local lspconfig = require("lspconfig")
         lspconfig.rust_analyzer.setup {}
+      end,
+
+      ["solidity"] = function()
+        local lspconfig = require("lspconfig")
+        lspconfig.solidity.setup {
+          cmd = { "nomicfoundation-solidity-language-server", "--stdio" },
+          filetypes = { "solidity" },
+          root_dir = require("lspconfig.util").root_pattern("hardhat.config.js", "hardhat.config.ts", "foundry.toml"),
+          single_file_support = true,
+          settings = {
+            solidity = {
+              compilerPath = vim.fn.exepath("solc")
+            }
+          }
+        }
       end,
 
     })
