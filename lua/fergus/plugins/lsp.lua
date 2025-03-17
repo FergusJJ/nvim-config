@@ -37,7 +37,8 @@ return {
         "jdtls",
         "ruff",
         "rust_analyzer",
-        "solidity_ls_nomicfoundation"
+        "solidity_ls_nomicfoundation",
+        "tsserver",
       },
 
       handlers = {
@@ -46,6 +47,7 @@ return {
             capabilities = capabilities
           }
         end,
+
 
         ["basedpyright"] = function()
           local lspconfig = require("lspconfig")
@@ -158,7 +160,6 @@ return {
             }
           }
         end,
-
         ["ruff"] = function()
           local lspconfig = require("lspconfig")
           lspconfig.ruff.setup {
@@ -196,7 +197,15 @@ return {
               },
             },
           }
-        end
+        end,
+
+        ["tsserver"] = function()
+          local lspconfig = require("lspconfig")
+          lspconfig.tsserver.setup {
+            filetypes = { "typescript", "javascript", "typescriptreact", "javascriptreact" },
+            capabilities = capabilities
+          }
+        end,
 
       },
 
