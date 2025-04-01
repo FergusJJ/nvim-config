@@ -3,13 +3,10 @@ return {
     "erikbackman/brightburn.vim",
   },
   {
-    "folke/tokyonight.nvim",
-    lazy = false,
-    opts = {},
-  },
-  {
     "ellisonleao/gruvbox.nvim",
     name = "gruvbox",
+    lazy = false,
+    priority = 1000,
     config = function()
       require("gruvbox").setup({
         terminal_colors = true, -- add neovim terminal colors
@@ -39,6 +36,8 @@ return {
   },
   {
     "folke/tokyonight.nvim",
+    lazy = false,
+    priority = 1000,
     config = function()
       require("tokyonight").setup({
         -- your configuration comes here
@@ -62,14 +61,11 @@ return {
   {
     "rose-pine/neovim",
     name = "rose-pine",
+    lazy = false,
+    priority = 1000,
     config = function()
-      --local color = "rose-pine-moon"
-      local color = "gruvbox"
-      --local color = "brightburn"
-      vim.cmd.colorscheme(color)
-
-      vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
-      vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+      --vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
+      --vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
       require('rose-pine').setup({
         disable_background = true,
         styles = {

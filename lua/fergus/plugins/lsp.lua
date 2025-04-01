@@ -13,6 +13,7 @@ return {
     "j-hui/fidget.nvim",
     --needed for java, idk whether same is needed for python etc
     "mfussenegger/nvim-jdtls",
+    "windwp/nvim-ts-autotag",
   },
 
   config = function()
@@ -40,6 +41,7 @@ return {
         "solidity_ls_nomicfoundation",
         "tsserver",
       },
+      require("nvim-ts-autotag").setup({}),
 
       handlers = {
         function(server_name) -- default handler (optional)
