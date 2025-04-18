@@ -39,7 +39,7 @@ return {
         "ruff",
         "rust_analyzer",
         "solidity_ls_nomicfoundation",
-        "tsserver",
+        "ts_ls",
       },
       require("nvim-ts-autotag").setup({}),
 
@@ -201,9 +201,9 @@ return {
           }
         end,
 
-        ["tsserver"] = function()
+        ["ts_ls"] = function()
           local lspconfig = require("lspconfig")
-          lspconfig.tsserver.setup {
+          lspconfig.ts_ls.setup {
             filetypes = { "typescript", "javascript", "typescriptreact", "javascriptreact" },
             capabilities = capabilities
           }
@@ -214,14 +214,7 @@ return {
     })
 
     require("lspconfig").sourcekit.setup({
-      -- capabilities = capabilities,
-      capabilities = {
-        workspace = {
-          didChangeWatchedFiles = {
-            dynamicRegistration = true,
-          },
-        },
-      },
+      capabilities = capabilities
     })
     local cmp_select = { behavior = cmp.SelectBehavior.Select }
 
