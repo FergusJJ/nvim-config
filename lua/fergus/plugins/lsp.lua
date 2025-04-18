@@ -213,6 +213,16 @@ return {
 
     })
 
+    require("lspconfig").sourcekit.setup({
+      -- capabilities = capabilities,
+      capabilities = {
+        workspace = {
+          didChangeWatchedFiles = {
+            dynamicRegistration = true,
+          },
+        },
+      },
+    })
     local cmp_select = { behavior = cmp.SelectBehavior.Select }
 
     cmp.setup({
@@ -232,6 +242,7 @@ return {
         { name = 'luasnip' }, -- For luasnip users.
       }, {
         { name = 'buffer' },
+        { name = 'path' },
       })
     })
 
