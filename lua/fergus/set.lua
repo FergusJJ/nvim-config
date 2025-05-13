@@ -32,3 +32,8 @@ vim.opt.updatetime = 50
 
 vim.opt.colorcolumn = "80"
 
+vim.opt.autoread = true
+
+vim.fn.timer_start(2000, function()
+  vim.cmd("silent! checktime")
+end, { ["repeat"] = -1 })
