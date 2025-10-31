@@ -11,6 +11,15 @@ return {
     "L3MON4D3/LuaSnip",
     "saadparwaiz1/cmp_luasnip",
     "j-hui/fidget.nvim",
+    {
+      "folke/lazydev.nvim",
+      ft = "lua",
+      opts = {
+        library = {
+          { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+        },
+      },
+    },
     --needed for java, idk whether same is needed for python etc
     "mfussenegger/nvim-jdtls",
     "windwp/nvim-ts-autotag",
@@ -30,15 +39,16 @@ return {
     require("mason-lspconfig").setup({
       ensure_installed = {
         "basedpyright",
-        "clangd",
-        "elixirls",
+        -- "clangd",
+        -- "elixirls",
         "lua_ls",
         "gopls",
-        "hls",
-        "jdtls",
-        "ruff",
-        "rust_analyzer",
-        "solidity_ls_nomicfoundation",
+        -- "hls",
+        -- "jdtls",
+        "prismals",
+        -- "ruff",
+        -- "rust_analyzer",
+        -- "solidity_ls_nomicfoundation",
         "ts_ls",
       },
       require("nvim-ts-autotag").setup({}),
@@ -200,7 +210,7 @@ return {
             },
           }
         end,
-
+        -- TODO  add oxlint
         ["ts_ls"] = function()
           local lspconfig = require("lspconfig")
           lspconfig.ts_ls.setup {
@@ -231,6 +241,7 @@ return {
         ["<C-Space>"] = cmp.mapping.complete(),
       }),
       sources = cmp.config.sources({
+        { name = "lazydev", group_index = 0 },
         { name = 'nvim_lsp' },
         { name = 'luasnip' }, -- For luasnip users.
       }, {
@@ -242,10 +253,10 @@ return {
     vim.diagnostic.config({
       update_in_insert = true,
       float = {
-        focusable = false,
+        focusable = true,
         style = "minimal",
         border = "rounded",
-        source = "always",
+        source = "if_many",
         header = "",
         prefix = "",
       },
