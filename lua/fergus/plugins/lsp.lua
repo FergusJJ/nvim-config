@@ -39,7 +39,9 @@ return {
     require("mason-lspconfig").setup({
       ensure_installed = {
         "basedpyright",
-        -- "clangd",
+        "clangd",
+        "cssls",
+        "cssmodules_ls",
         -- "elixirls",
         "lua_ls",
         "gopls",
@@ -50,6 +52,7 @@ return {
         -- "rust_analyzer",
         -- "solidity_ls_nomicfoundation",
         "ts_ls",
+
       },
       require("nvim-ts-autotag").setup({}),
 
@@ -143,6 +146,16 @@ return {
           }
         end,
 
+        ["cssmodules_ls"] = function()
+          local lspconfig = require("lspconfig")
+          lspconfig.cssmodules_ls.setup {
+            filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
+            capabilities = capabilities,
+            init_options = {
+              camelCase = "dashes"
+            }
+          }
+        end,
         ["elixirls"] = function()
           local lspconfig = require("lspconfig")
           lspconfig.elixirls.setup {

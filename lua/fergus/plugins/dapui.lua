@@ -1,33 +1,67 @@
--- ~/.config/nvim/lua/fergus/plugins/dapui.lua
 return {
   "rcarriga/nvim-dap-ui",
-  -- Specify nvim-dap as a dependency, ensures it loads first
-  -- nvim-nio is also recommended by dap-ui for performance
-  dependencies = {
-    "mfussenegger/nvim-dap",
-    "nvim-neotest/nvim-nio"
-  },
+  dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" },
   config = function()
     local dap = require("dap")
     local dapui = require("dapui")
 
-    dapui.setup({})
-
-    dap.listeners.after.event_initialized["dapui_config"] = function()
-      dapui.open({}) -- Pass empty table, or specific overrides { layout = "my_layout" }
+    -- 1. DEFINE INDIVIDUAL LAYOUTS
+    -- Instead of one big sidebar, we define a layout for EVERY component
+    local function make_layout(name, pos, size)
+      return {
+        elements = { { id = name } },
+        enter = true,
+        size = size or 40,
+        position = pos or "right",
+      }
     end
 
-    dap.listeners.before.event_terminated["dapui_config"] = function()
-      dapui.close({})
+    local name_to_layout = {
+      repl        = { layout = make_layout("repl", "right"), index = 0 },
+      stacks      = { layout = make_layout("stacks", "right"), index = 0 },
+      scopes      = { layout = make_layout("scopes", "right"), index = 0 },
+      watches     = { layout = make_layout("watches", "right"), index = 0 },
+      breakpoints = { layout = make_layout("breakpoints", "right"), index = 0 },
+      console     = { layout = make_layout("console", "bottom", 10), index = 0 },
+    }
+
+    local layouts_list = {}
+    for name, config in pairs(name_to_layout) do
+      table.insert(layouts_list, config.layout)
+      -- Store the index so we can toggle by number later
+      name_to_layout[name].index = #layouts_list
     end
 
-    dap.listeners.before.event_exited["dapui_config"] = function()
-      dapui.close({})
+    dapui.setup({ layouts = layouts_list })
+
+    -- 2. TOGGLE FUNCTION
+    local function toggle_debug_ui(name)
+      -- Close everything else first (optional, prevents clutter)
+      dapui.close()
+
+      local config = name_to_layout[name]
+      if not config then return end
+
+      -- Auto-resize to current split width if possible
+      local uis = vim.api.nvim_list_uis()[1]
+      if uis then config.layout.size = 40 end -- Reset to default or calculate dynamic
+
+      dapui.toggle({ layout = config.index })
     end
 
-    vim.keymap.set("n", "<leader>du", function() dapui.toggle({}) end, { desc = "DAP UI: Toggle" })
-    vim.keymap.set("n", "<leader>do", function() dapui.open({}) end, { desc = "DAP UI: Open" })
-    vim.keymap.set("n", "<leader>dc", function() dapui.close({}) end, { desc = "DAP UI: Close" })
-    vim.keymap.set({ "n", "v" }, "<leader>de", function() dapui.eval() end, { desc = "DAP UI: Evaluate" })
+    -- 3. KEYMAPS FOR INDIVIDUAL WINDOWS
+    vim.keymap.set("n", "<leader>dr", function() toggle_debug_ui("repl") end, { desc = "DAP: Toggle REPL" })
+    vim.keymap.set("n", "<leader>ds", function() toggle_debug_ui("stacks") end, { desc = "DAP: Toggle Stacks" })
+    vim.keymap.set("n", "<leader>dw", function() toggle_debug_ui("watches") end, { desc = "DAP: Toggle Watches" })
+    vim.keymap.set("n", "<leader>db", function() toggle_debug_ui("breakpoints") end, { desc = "DAP: Toggle Breakpoints" })
+    vim.keymap.set("n", "<leader>dS", function() toggle_debug_ui("scopes") end, { desc = "DAP: Toggle Scopes" })
+    vim.keymap.set("n", "<leader>dC", function() toggle_debug_ui("console") end, { desc = "DAP: Toggle Console" })
+
+    -- Generic "Eval"
+    vim.keymap.set({ "n", "v" }, "<leader>de", dapui.eval, { desc = "DAP: Eval under cursor" })
+
+    -- 4. AUTO-CLOSE EVENTS
+    dap.listeners.before.event_terminated.dapui_config = function() dapui.close() end
+    dap.listeners.before.event_exited.dapui_config = function() dapui.close() end
   end,
 }

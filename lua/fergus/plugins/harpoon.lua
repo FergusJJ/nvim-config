@@ -13,11 +13,11 @@ return {
     vim.keymap.set("n", "<C-q>", function() harpoon:list():select(1) end)
     vim.keymap.set("n", "<C-a>", function() harpoon:list():select(2) end)
     vim.keymap.set("n", "<C-z>", function() harpoon:list():select(3) end)
-    vim.keymap.set("n", "<C-l>", function() harpoon:list():select(4) end)
+    vim.keymap.set("n", "<C-x>", function() harpoon:list():select(4) end)
 
     vim.keymap.set("n", "<leader><C-q>", function() harpoon:list():select(1) end)
     vim.keymap.set("n", "<leader><C-a>", function() harpoon:list():select(2) end)
     vim.keymap.set("n", "<leader><C-z>", function() harpoon:list():select(3) end)
-    vim.keymap.set("n", "<leader><C-l>", function() harpoon:list():select(4) end)
+    vim.keymap.set("n", "<leader><C-x>", function() harpoon:list():select(4) end)
   end
 }
