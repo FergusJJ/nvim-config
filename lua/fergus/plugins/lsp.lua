@@ -39,6 +39,7 @@ return {
     require("mason-lspconfig").setup({
       ensure_installed = {
         "basedpyright",
+        "bufls",
         "clangd",
         "cssls",
         "cssmodules_ls",
