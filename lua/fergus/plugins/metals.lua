@@ -16,26 +16,14 @@ return {
       testUserInterface = "Test Explorer",
     }
 
-    -- 3. Initialize the plugin
     metals_config.init_options.statusBarProvider = "on"
-
-    -- 4. ATTACH: What happens when Scala attaches
     metals_config.on_attach = function(client, bufnr)
       require("metals").setup_dap()
 
-      -- Keymaps specifically for Scala files
-      local map = vim.keymap.set
-
-      -- LSP Navigation
-      vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = bufnr, desc = "Go to definition" })
-      vim.keymap.set("n", "K", vim.lsp.buf.hover, { buffer = bufnr, desc = "Hover documentation" })
-      vim.keymap.set("n", "vrr", vim.lsp.buf.references, { buffer = bufnr, desc = "Go to references" })
-      vim.keymap.set("n", "gi", vim.lsp.buf.implementation, { buffer = bufnr, desc = "Go to implementation" })
-
       -- Metals Specifics
-      map("n", "<leader>mws", function() require("metals").hover_worksheet() end,
+      vim.keymap.set("n", "<leader>mws", function() require("metals").hover_worksheet() end,
         { buffer = bufnr, desc = "Hover Worksheet" })
-      map("n", "<leader>mi", function() require("metals").toggle_setting("showImplicitArguments") end,
+      vim.keymap.set("n", "<leader>mi", function() require("metals").toggle_setting("showImplicitArguments") end,
         { buffer = bufnr, desc = "Toggle Implicits" })
     end
 
