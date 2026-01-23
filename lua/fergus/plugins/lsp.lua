@@ -20,7 +20,6 @@ return {
         },
       },
     },
-    --needed for java, idk whether same is needed for python etc
     "mfussenegger/nvim-jdtls",
     "windwp/nvim-ts-autotag",
   },
@@ -36,6 +35,8 @@ return {
 
     require("fidget").setup({})
     require("mason").setup()
+    require("nvim-ts-autotag").setup({})
+
     require("mason-lspconfig").setup({
       ensure_installed = {
         "basedpyright",
@@ -50,26 +51,22 @@ return {
         -- "jdtls",
         "prismals",
         -- "ruff",
-        -- "rust_analyzer",
-        -- "solidity_ls_nomicfoundation",
+        "rust_analyzer",
+        "solidity_ls_nomicfoundation",
         "ts_ls",
-
       },
-      require("nvim-ts-autotag").setup({}),
 
       handlers = {
-        function(server_name) -- default handler (optional)
-          require("lspconfig")[server_name].setup {
+        -- Default Handler (applied to any server without a specific config below)
+        function(server_name)
+          vim.lsp.config(server_name, {
             capabilities = capabilities
-          }
+          })
         end,
 
-
         ["basedpyright"] = function()
-          local lspconfig = require("lspconfig")
-          local util = require("lspconfig/util")
-
-          lspconfig.basedpyright.setup {
+          local util = require("lspconfig.util")
+          vim.lsp.config("basedpyright", {
             settings = {
               basedpyright = {
                 disableOrganizeImports = true,
@@ -117,18 +114,15 @@ return {
                 print("setting venv: %s", venv_python_path)
               end
 
-              -- Set the Python path in the LSP config
               config.settings.python = {
                 pythonPath = venv_python_path
               }
             end,
-          }
+          })
         end,
 
         ["clangd"] = function()
-          local lspconfig = require("lspconfig")
-          lspconfig.clangd.setup {
-            root_dir = require("lspconfig").util.root_pattern("src"),
+          vim.lsp.config("clangd", {
             cmd = {
               "clangd",
               "--background-index",
@@ -144,22 +138,21 @@ return {
             },
             filetypes = { "c", "cpp", "objc", "objcpp" },
             capabilities = capabilities,
-          }
+          })
         end,
 
         ["cssmodules_ls"] = function()
-          local lspconfig = require("lspconfig")
-          lspconfig.cssmodules_ls.setup {
+          vim.lsp.config("cssmodules_ls", {
             filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
             capabilities = capabilities,
             init_options = {
               camelCase = "dashes"
             }
-          }
+          })
         end,
+
         ["elixirls"] = function()
-          local lspconfig = require("lspconfig")
-          lspconfig.elixirls.setup {
+          vim.lsp.config("elixirls", {
             capabilities = capabilities,
             settings = {
               elixirLS = {
@@ -169,12 +162,11 @@ return {
                 suggestSpecs = true,
               }
             },
-          }
+          })
         end,
 
         ["lua_ls"] = function()
-          local lspconfig = require("lspconfig")
-          lspconfig.lua_ls.setup {
+          vim.lsp.config("lua_ls", {
             capabilities = capabilities,
             settings = {
               Lua = {
@@ -184,27 +176,24 @@ return {
                 }
               }
             }
-          }
+          })
         end,
+
         ["ruff"] = function()
-          local lspconfig = require("lspconfig")
-          lspconfig.ruff.setup {
+          vim.lsp.config("ruff", {
             on_attach = function(client, _)
               client.server_capabilities.hoverProvider = false
             end
-          }
+          })
         end,
 
         ["rust_analyzer"] = function()
-          local lspconfig = require("lspconfig")
-          lspconfig.rust_analyzer.setup {}
+          vim.lsp.config("rust_analyzer", {})
         end,
 
         ["solidity_ls_nomicfoundation"] = function()
-          local lspconfig = require("lspconfig")
           local util = require("lspconfig.util")
-
-          lspconfig.solidity.setup {
+          vim.lsp.config("solidity_ls_nomicfoundation", {
             cmd = { "nomicfoundation-solidity-language-server", "--stdio" },
             filetypes = { "solidity" },
             root_dir = util.root_pattern("hardhat.config.js", "hardhat.config.ts", "foundry.toml", "forge.toml", ".git"),
@@ -222,30 +211,29 @@ return {
                 linter = "solhint"
               },
             },
-          }
+          })
         end,
-        -- TODO  add oxlint
+
         ["ts_ls"] = function()
-          local lspconfig = require("lspconfig")
-          lspconfig.ts_ls.setup {
+          vim.lsp.config("ts_ls", {
             filetypes = { "typescript", "javascript", "typescriptreact", "javascriptreact" },
             capabilities = capabilities
-          }
+          })
         end,
-
-      },
-
+      }
     })
 
-    require("lspconfig").sourcekit.setup({
+    -- Manual setup for Sourcekit (not managed by Mason)
+    vim.lsp.config("sourcekit", {
       capabilities = capabilities
     })
+
     local cmp_select = { behavior = cmp.SelectBehavior.Select }
 
     cmp.setup({
       snippet = {
         expand = function(args)
-          require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
+          require('luasnip').lsp_expand(args.body)
         end,
       },
       mapping = cmp.mapping.preset.insert({
@@ -257,7 +245,7 @@ return {
       sources = cmp.config.sources({
         { name = "lazydev", group_index = 0 },
         { name = 'nvim_lsp' },
-        { name = 'luasnip' }, -- For luasnip users.
+        { name = 'luasnip' },
       }, {
         { name = 'buffer' },
         { name = 'path' },

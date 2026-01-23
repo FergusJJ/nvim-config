@@ -11,6 +11,15 @@ return {
 
     telescope.setup({
       defaults = {
+        --        layout_config = {
+        --         vertical = {
+        --           width = 0.95
+        --         },
+        --         horizontal = {
+        --           width = 0.65
+        --         },
+        --       },
+        path_display = { "smart" },
         mappings = {
           i = {
             -- SCROLLING IN PREVIEW
@@ -28,7 +37,7 @@ return {
     -- We wrap the builtin call in a function so it doesn't run on startup
     vim.keymap.set('n', '<leader>pf', function()
       builtin.find_files(require('telescope.themes').get_dropdown({
-        previewer = false,
+        --         previewer = false,
       }))
     end, {})
 
@@ -53,5 +62,19 @@ return {
     end)
 
     vim.keymap.set('n', '<leader>vh', builtin.help_tags, {})
+
+    -- SQL file search
+    vim.keymap.set('n', '<leader>pq', function()
+      builtin.find_files({
+        find_command = { 'rg', '--files', '--glob', '*.sql' },
+      })
+    end, { desc = "Find SQL files" })
+
+    -- Grep within SQL files
+    vim.keymap.set('n', '<leader>psq', function()
+      builtin.live_grep({
+        glob_pattern = '*.sql',
+      })
+    end, { desc = "Grep in SQL files" })
   end
 }
