@@ -6,7 +6,6 @@ return {
     "antoinemadec/FixCursorHold.nvim",
     "nvim-treesitter/nvim-treesitter",
     "nvim-neotest/neotest-jest",
-    "stevanmilic/neotest-scala",
   },
 
   config = function()
@@ -38,11 +37,6 @@ return {
                 or file_path:match("%.spec%.tsx?$") ~= nil
           end,
         }),
-        require("neotest-scala")({
-          args = { "--no-color" },
-          runner = "sbt",
-          framework = "scalatest"
-        })
       }
     })
 

@@ -65,7 +65,6 @@ return {
         end,
 
         ["basedpyright"] = function()
-          local util = require("lspconfig.util")
           vim.lsp.config("basedpyright", {
             settings = {
               basedpyright = {
@@ -80,16 +79,16 @@ return {
               },
             },
             before_init = function(_, config)
-              local venv_base_path = util.path.join(vim.env.HOME, "virtualenvs")
-              local venv_python_path = util.path.join(venv_base_path, "default-venv", "bin", "python")
+              local venv_base_path = table.concat({ vim.env.HOME, "virtualenvs" })
+              local venv_python_path = table.concat({ venv_base_path, "default-venv", "bin", "python" })
 
               if config.root_dir ~= nil then
                 local root_dir_name = ""
                 for substring in string.gmatch(config.root_dir, "([^/]+)") do
                   root_dir_name = substring
                 end
-                local project_venv_path = util.path.join(venv_base_path, root_dir_name)
-                local project_venv_bin_path = util.path.join(project_venv_path, "bin", "python")
+                local project_venv_path = table.concat({ venv_base_path, root_dir_name })
+                local project_venv_bin_path = table.concat({ project_venv_path, "bin", "python" })
                 local function dir_exists(path)
                   local stat = vim.loop.fs_stat(path)
                   return stat and stat.type == 'directory'
@@ -97,7 +96,7 @@ return {
                 if not dir_exists(project_venv_path) then
                   os.execute(string.format("python3 -m venv %s", project_venv_path))
                   print("Created virtual environment: ", project_venv_path)
-                  local requirements_path = util.path.join(config.root_dir, "requirements.txt")
+                  local requirements_path = table.concat({ config.root_dir, "requirements.txt" })
                   local function file_exists(path)
                     local stat = vim.loop.fs_stat(path)
                     return stat and stat.type == 'file'
@@ -222,11 +221,13 @@ return {
         end,
       }
     })
+    vim.lsp.enable('clangd');
 
     -- Manual setup for Sourcekit (not managed by Mason)
     vim.lsp.config("sourcekit", {
       capabilities = capabilities
     })
+    vim.lsp.enable('sourcekit');
 
     local cmp_select = { behavior = cmp.SelectBehavior.Select }
 

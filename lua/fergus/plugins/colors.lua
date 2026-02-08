@@ -26,11 +26,13 @@ return {
         invert_tabline = false,
         invert_intend_guides = false,
         inverse = true,    -- invert background for search, diffs, statuslines and errors
-        contrast = "soft", -- can be "hard", "soft" or empty string
+        contrast = "hard", -- can be "hard", "soft" or empty string
         palette_overrides = {},
-        overrides = {},
-        dim_inactive = true,
-        transparent_mode = false,
+        overrides = {
+          --           TelescopeBorder = { bg = "none" }
+        },
+        dim_inactive = false,
+        transparent_mode = true,
       })
     end,
   },
@@ -67,7 +69,7 @@ return {
       --vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
       --vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
       require('rose-pine').setup({
-        disable_background = true,
+        disable_background = false,
         styles = {
           italic = false,
         },

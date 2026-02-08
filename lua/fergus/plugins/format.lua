@@ -13,7 +13,7 @@ return {
         json = { "prettierd", "prettier", stop_after_first = true },
         jsonc = { "prettierd", "prettier", stop_after_first = true },
         prisma = { "prettierd", "prettier", stop_after_first = true },
-        swift = { "swiftformat"}
+        swift = { "swiftformat" }
       },
       format_on_save = {
         timeout_ms = 500,
